@@ -5,12 +5,26 @@ body {
   background-color: #f0f0f0;
 }
 
-.controls {
-  margin-bottom: 10px;
+.controls button {
+  font-size: 15px;       /* Aumenta o tamanho do texto dos botões */
+  padding: 12px 24px;    /* Aumenta o tamanho dos botões */
+  margin: 5px;
+  cursor: pointer;
+}
+
+#progressBar,
+#zoomRange {
+  width: 300px;
+  height: 30px;
+}
+
+label {
+  font-size: 18px;
 }
 
 #radarImage {
   transition: transform 0.3s ease;
-  max-width: 100%;
+  max-width: 55%;        /* Reduz o tamanho da imagem */
   border: 2px solid #333;
+  margin-top: 20px;
 }
