@@ -132,6 +132,7 @@ sympy==1.13.3
 terminado==0.18.1
 threadpoolctl==3.6.0
 tinycss2==1.4.0
+--find-links https://download.pytorch.org/whl/torch_stable.html
 torch==2.7.1+cpu
 tornado==6.5.1
 tqdm==4.67.1
