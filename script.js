@@ -9,6 +9,7 @@ const progressBar = document.getElementById("progressBar");
 const zoomRange = document.getElementById("zoomRange");
 const previsaoTexto = document.getElementById("previsaoTexto");
 
+// 🔍 Gera texto de previsão com base nas cores médias
 function gerarPrevisaoPorCor(r, g, b) {
   let texto = "";
   let classe = "";
@@ -31,12 +32,13 @@ function gerarPrevisaoPorCor(r, g, b) {
   previsaoTexto.className = classe;
 }
 
+// 🖼️ Analisa a imagem atual do radar
 function analisarImagemRadar() {
   const img = new Image();
   img.crossOrigin = "Anonymous";
   img.src = radarImage.src;
 
-  img.onload = function () {
+  img.onload = () => {
     const canvas = document.createElement("canvas");
     canvas.width = img.width;
     canvas.height = img.height;
@@ -47,13 +49,14 @@ function analisarImagemRadar() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
     let r = 0, g = 0, b = 0;
+    const totalPixels = imageData.length / 4;
+
     for (let i = 0; i < imageData.length; i += 4) {
       r += imageData[i];
       g += imageData[i + 1];
       b += imageData[i + 2];
     }
 
-    const totalPixels = imageData.length / 4;
     r = Math.round(r / totalPixels);
     g = Math.round(g / totalPixels);
     b = Math.round(b / totalPixels);
@@ -62,6 +65,7 @@ function analisarImagemRadar() {
   };
 }
 
+// 🔄 Atualiza imagem do radar e analisa
 function updateImage() {
   radarImage.src = `${baseUrl}${index}.png?nocache=${Date.now()}`;
   progressBar.value = index;
@@ -71,39 +75,54 @@ function updateImage() {
   };
 }
 
+// ⏪ Imagem anterior
 function next() {
   index = index > 1 ? index - 1 : totalImages;
   updateImage();
 }
 
+// ⏩ Próxima imagem
 function prev() {
   index = index < totalImages ? index + 1 : 1;
   updateImage();
 }
 
+// ▶️ Inicia animação
 function play() {
   if (!interval) {
     interval = setInterval(next, 2000);
   }
 }
 
+// ⏸️ Pausa animação
 function pause() {
   clearInterval(interval);
   interval = null;
 }
 
-progressBar.addEventListener("input", function () {
-  index = parseInt(this.value);
+// 🎚️ Controle de imagem manual
+progressBar.addEventListener("input", () => {
+  index = parseInt(progressBar.value);
   updateImage();
 });
 
-zoomRange.addEventListener("input", function () {
-  const scale = parseFloat(this.value);
+// 🔍 Zoom na imagem
+zoomRange.addEventListener("input", () => {
+  const scale = parseFloat(zoomRange.value);
   radarImage.style.transform = `scale(${scale})`;
 });
 
+// 🚀 Inicializa ao carregar a página
 window.addEventListener("DOMContentLoaded", () => {
   index = 1;
   progressBar.value = index;
   updateImage();
 });
+fetch("/previsao")
+  .then(res => res.json())
+  .then(data => {
+    previsaoTexto.textContent = data.previsao;
+  })
+  .catch(() => {
+    previsaoTexto.textContent = "Erro ao obter previsão.";
+  });

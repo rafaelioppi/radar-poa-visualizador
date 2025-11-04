@@ -1,41 +1,57 @@
+import os
 import requests
-import base64
+import google.generativeai as genai
+from dotenv import load_dotenv
+from PIL import Image
+import numpy as np
 
-# Configurações
-API_KEY = "SUA_CHAVE_DE_API"
-IMAGE_URL = "https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_1.png"
-ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent"
+# 🔐 Carrega chave da API do .env
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Baixa e codifica a imagem
-response = requests.get(IMAGE_URL)
-image_base64 = base64.b64encode(response.content).decode("utf-8")
+# 📥 Baixa a imagem do radar
+url = "https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_1.png"
+with open("radar_poa_1.png", "wb") as f:
+    f.write(requests.get(url).content)
 
-# Monta o payload
-payload = {
-    "contents": [
-        {
-            "parts": [
-                {
-                    "text": "Analise esta imagem de radar meteorológico e gere uma previsão do tempo para Porto Alegre."
-                },
-                {
-                    "inline_data": {
-                        "mime_type": "image/png",
-                        "data": image_base64
-                    }
-                }
-            ]
-        }
-    ]
-}
+# 🧠 Função de fallback local baseada em cores
+def gerar_previsao_por_cor(r, g, b):
+    if r > 150 and g < 100 and b < 100:
+        return "🌩️ Chuva intensa ou tempestade detectada. Evite áreas abertas."
+    elif g > 150 and r < 100:
+        return "🌦️ Chuva leve predominante. Tempo instável."
+    elif r > 100 and g > 100:
+        return "🌧️ Chuva moderada se espalhando pela região."
+    else:
+        return "☁️ Sem atividade significativa detectada."
 
-# Envia para Gemini Vision
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
-}
+# 🔄 Função principal reutilizável
+def gerar_previsao():
+    try:
+        model = genai.GenerativeModel("models/gemini-2.5-flash-image")
 
-res = requests.post(ENDPOINT, headers=headers, json=payload)
+        response = model.generate_content([
+            "Analise esta imagem de radar meteorológico e gere uma previsão do tempo para Porto Alegre.",
+            {
+                "mime_type": "image/png",
+                "data": open("radar_poa_1.png", "rb").read()
+            }
+        ])
 
-# Exibe a previsão gerada
-print(res.json()["candidates"][0]["content"]["parts"][0]["text"])
+        return response.text
+
+    except Exception as e:
+        print("⚠️ Falha ao usar IA. Usando fallback local.")
+        print("🔧 Erro:", str(e))
+
+        # 🖼️ Análise local da imagem
+        img = Image.open("radar_poa_1.png").convert("RGB")
+        pixels = np.array(img).reshape(-1, 3)
+        r, g, b = np.mean(pixels, axis=0).astype(int)
+
+        return gerar_previsao_por_cor(r, g, b)
+
+# 🧪 Execução direta (para testes locais)
+if __name__ == "__main__":
+    print("✅ Previsão gerada:")
+    print(gerar_previsao())
