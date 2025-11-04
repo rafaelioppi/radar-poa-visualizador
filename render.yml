@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: radar-poa-visualizador
+    env: python
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: bash start.sh
+    pythonVersion: 3.11
