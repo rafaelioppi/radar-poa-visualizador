@@ -4,15 +4,14 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from PIL import Image
 import numpy as np
+from datetime import datetime
 
 # 🔐 Carrega chave da API do .env
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# 📥 Baixa a imagem do radar
-url = "https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_1.png"
-with open("radar_poa_1.png", "wb") as f:
-    f.write(requests.get(url).content)
+# 📁 Garante que a pasta data/ existe
+os.makedirs("data", exist_ok=True)
 
 # 🧠 Função de fallback local baseada em cores
 def gerar_previsao_por_cor(r, g, b):
@@ -26,32 +25,37 @@ def gerar_previsao_por_cor(r, g, b):
         return "☁️ Sem atividade significativa detectada."
 
 # 🔄 Função principal reutilizável
-def gerar_previsao():
+def gerar_previsao(index=1):
     try:
-        model = genai.GenerativeModel("models/gemini-2.5-flash-image")
+        filename = f"radar_poa_{index}.png"
+        filepath = os.path.join("data", filename)
 
+        url = f"https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_{index}.png"
+        with open(filepath, "wb") as f:
+            f.write(requests.get(url).content)
+
+        model = genai.GenerativeModel("models/gemini-2.5-flash-image")
         response = model.generate_content([
             "Analise esta imagem de radar meteorológico e gere uma previsão do tempo para Porto Alegre.",
             {
                 "mime_type": "image/png",
-                "data": open("radar_poa_1.png", "rb").read()
+                "data": open(filepath, "rb").read()
             }
         ])
-
         return response.text
 
     except Exception as e:
         print("⚠️ Falha ao usar IA. Usando fallback local.")
         print("🔧 Erro:", str(e))
 
-        # 🖼️ Análise local da imagem
-        img = Image.open("radar_poa_1.png").convert("RGB")
+        img = Image.open(filepath).convert("RGB")
         pixels = np.array(img).reshape(-1, 3)
         r, g, b = np.mean(pixels, axis=0).astype(int)
 
         return gerar_previsao_por_cor(r, g, b)
 
-# 🧪 Execução direta (para testes locais)
+
+# 🧪 Teste local
 if __name__ == "__main__":
     print("✅ Previsão gerada:")
     print(gerar_previsao())

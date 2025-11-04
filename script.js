@@ -8,21 +8,29 @@ const radarImage = document.getElementById("radarImage");
 const progressBar = document.getElementById("progressBar");
 const zoomRange = document.getElementById("zoomRange");
 const previsaoTexto = document.getElementById("previsaoTexto");
+const historico = document.getElementById("historicoPrevisoes");
+const botaoAtualizar = document.getElementById("forcarAnalise");
 
 // 🔍 Gera texto de previsão com base nas cores médias
 function gerarPrevisaoPorCor(r, g, b) {
   let texto = "";
   let classe = "";
 
-  if (r > 150 && g < 100 && b < 100) {
-    texto = "🌩️ Chuva intensa ou tempestade detectada. Evite áreas abertas.";
+  if (r > 200 && g < 80 && b < 80) {
+    texto = "🌩️ Tempestade severa detectada. Risco de granizo.";
     classe = "previsao-intensa";
-  } else if (g > 150 && r < 100) {
-    texto = "🌦️ Chuva leve predominante. Tempo instável.";
-    classe = "previsao-leve";
-  } else if (r > 100 && g > 100) {
-    texto = "🌧️ Chuva moderada se espalhando pela região.";
+  } else if (r > 180 && g > 100 && b < 50) {
+    texto = "🌧️ Chuva forte na região. Fique atento.";
     classe = "previsao-moderada";
+  } else if (r > 150 && g > 150 && b < 80) {
+    texto = "🌦️ Chuva moderada se espalhando.";
+    classe = "previsao-leve";
+  } else if (g > 120 && b < 100) {
+    texto = "🌦️ Chuva leve predominante.";
+    classe = "previsao-leve";
+  } else if (b > 150 && g > 150) {
+    texto = "☁️ Céu nublado com possibilidade de chuvisco.";
+    classe = "previsao-leve";
   } else {
     texto = "☁️ Sem atividade significativa detectada.";
     classe = "previsao-leve";
@@ -67,30 +75,34 @@ function analisarImagemRadar() {
 
 // 🔄 Atualiza imagem do radar e analisa
 function updateImage() {
-  radarImage.src = `${baseUrl}${index}.png?nocache=${Date.now()}`;
-  progressBar.value = index;
+ radarImage.src = `/radar/${index}?nocache=${Date.now()}`;
+ progressBar.value = index;
 
   radarImage.onload = () => {
     analisarImagemRadar();
   };
 }
 
-// ⏪ Imagem anterior
+// ⏩ Próxima imagem
 function next() {
-  index = index > 1 ? index - 1 : totalImages;
+  index = index < totalImages ? index + 1 : 1;
+  progressBar.value = index;
   updateImage();
 }
 
-// ⏩ Próxima imagem
+// ⏪ Imagem anterior
 function prev() {
-  index = index < totalImages ? index + 1 : 1;
+  index = index > 1 ? index - 1 : totalImages;
+  progressBar.value = index;
   updateImage();
 }
 
 // ▶️ Inicia animação
 function play() {
   if (!interval) {
-    interval = setInterval(next, 2000);
+    interval = setInterval(() => {
+      next();
+    }, 500); // velocidade da animação
   }
 }
 
@@ -100,7 +112,31 @@ function pause() {
   interval = null;
 }
 
-// 🎚️ Controle de imagem manual
+// 📜 Adiciona previsão ao histórico com data e hora
+function adicionarAoHistorico(texto) {
+  const item = document.createElement("li");
+  const agora = new Date();
+  const horario = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const data = agora.toLocaleDateString("pt-BR");
+  item.textContent = `[${data} ${horario}] ${texto}`;
+  historico.prepend(item);
+}
+
+// 🌦️ Busca previsão do back-end
+function buscarPrevisao() {
+  fetch(`/previsao?index=${index}`)
+    .then(res => res.json())
+    .then(data => {
+      previsaoTexto.textContent = data.previsao;
+      adicionarAoHistorico(data.previsao);
+    })
+    .catch(() => {
+      previsaoTexto.textContent = "Erro ao obter previsão.";
+    });
+}
+
+
+// 🎚️ Controle manual da imagem
 progressBar.addEventListener("input", () => {
   index = parseInt(progressBar.value);
   updateImage();
@@ -112,17 +148,15 @@ zoomRange.addEventListener("input", () => {
   radarImage.style.transform = `scale(${scale})`;
 });
 
+// 🔄 Botão para forçar nova análise
+botaoAtualizar.addEventListener("click", () => {
+  buscarPrevisao();
+});
+
 // 🚀 Inicializa ao carregar a página
 window.addEventListener("DOMContentLoaded", () => {
   index = 1;
   progressBar.value = index;
   updateImage();
+  buscarPrevisao();
 });
-fetch("/previsao")
-  .then(res => res.json())
-  .then(data => {
-    previsaoTexto.textContent = data.previsao;
-  })
-  .catch(() => {
-    previsaoTexto.textContent = "Erro ao obter previsão.";
-  });

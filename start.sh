@@ -13,5 +13,11 @@ fi
 # Carrega variáveis do .env
 export $(grep -v '^#' .env | xargs)
 
+# Verifica se app.py existe
+if [ ! -f "app.py" ]; then
+  echo "❌ Arquivo app.py não encontrado. Abortando."
+  exit 1
+fi
+
 # Executa o servidor Flask
 python app.py
