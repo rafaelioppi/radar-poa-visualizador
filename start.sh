@@ -2,21 +2,15 @@
 
 echo "🚀 Iniciando Radar POA Visualizador..."
 
-# Ativa ambiente virtual se existir
-if [ -d "venv" ]; then
-  source venv/bin/activate
-  echo "✅ Ambiente virtual ativado."
-else
-  echo "⚠️ Nenhum ambiente virtual encontrado. Rodando com Python global."
-fi
+# Atualiza pip e instala dependências
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install torch==2.7.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
-# Carrega variáveis do .env
-export $(grep -v '^#' .env | xargs)
-
-# Verifica se app.py existe
-if [ ! -f "app.py" ]; then
-  echo "❌ Arquivo app.py não encontrado. Abortando."
-  exit 1
+# Carrega variáveis do .env (se existir)
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs)
+  echo "✅ Variáveis de ambiente carregadas."
 fi
 
 # Executa o servidor Flask
