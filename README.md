@@ -27,6 +27,7 @@ Você pode acessá-lo diretamente aqui:
 - **HTML5**  
 - **CSS3**  
 - **JavaScript Vanilla**
+- **Phyton3**
 
 ---
 
