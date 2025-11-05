@@ -8,28 +8,33 @@
 <body>
   <h1>Radar Meteorológico de Porto Alegre</h1>
 
-  <div class="controls">
-    <button onclick="prev()">⏮️ Anterior</button>
-    <button onclick="play()">▶️ Play</button>
-    <button onclick="pause()">⏸️ Pause</button>
-    <button onclick="next()">⏭️ Próximo</button>
+  <div id="radarWrapper">
+    <div id="radarContainer">
+      <img id="radarImage" src="" alt="Radar POA">
+      <div id="zoomControl">
+        🔍 Zoom:
+        <input type="range" id="zoomRange" min="1" max="3" step="0.1" value="1">
+      </div>
+    </div>
   </div>
 
-  <input type="range" id="progressBar" min="1" max="24" value="1">
-  <label for="zoomRange">Zoom:</label>
-  <input type="range" id="zoomRange" min="1" max="3" step="0.1" value="1">
-  <br><br>
+  <div id="progressContainer">
+    <input type="range" id="progressBar" min="1" max="24" list="tickmarks" value="1">
+    <datalist id="tickmarks">
+      <script>
+        for (let i = 1; i <= 24; i++) {
+          document.write(`<option value="${i}">|</option>`);
+        }
+      </script>
+    </datalist>
+  </div>
 
-  <img id="radarImage" src="" alt="Radar POA">
-
-  <h2>Previsão do Tempo</h2>
-    <p id="previsaoTexto">Carregando previsão...</p>
-    <button id="forcarAnalise">🔄 Atualizar previsão</button>
-
-    <h3>Histórico de Previsões</h3>
-    <ul id="historicoPrevisoes"></ul>
-  <!-- Previsão simulada com base na imagem -->
-  <p id="previsaoTexto" style="font-size: 18px; font-weight: bold; margin-top: 10px;"></p>
+  <div id="controls">
+    <button onclick="play()">▶️ Play</button>
+    <button onclick="pause()">⏸️ Pause</button>
+    <button onclick="prev()">⏮️ Anterior</button>
+    <button onclick="next()">⏭️ Próxima</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
