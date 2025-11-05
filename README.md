@@ -1,33 +1,37 @@
-🌦️ Radar POA Interativo
-Radar POA Interativo é uma aplicação web que permite visualizar imagens de radar meteorológico da região de Porto Alegre de forma dinâmica e intuitiva. Ideal para acompanhar a evolução das condições climáticas ao longo do tempo.
+# 🌦️ Radar POA Interativo
 
-🔗 Acesso ao Projeto
-O projeto está disponível online via Render: 👉 radar-poa-visualizador.onrender.com
+**Radar POA Interativo** é uma aplicação web que permite visualizar imagens de radar meteorológico da região de **Porto Alegre** de forma dinâmica e intuitiva. Ideal para acompanhar a evolução das condições climáticas ao longo do tempo.
 
-📸 Funcionalidades
-Exibição sequencial de 24 imagens de radar
+---
 
-Controles de navegação: anterior, próximo, play e pause
+## 🔗 Acesso ao Projeto
 
-Zoom interativo para análise detalhada
+👉 [radar-poa-visualizador.onrender.com](https://radar-poa-visualizador.onrender.com)
 
-Barra de progresso com marcações por frame
+---
 
-Atualização automática das imagens com cache busting
+## 📸 Funcionalidades
 
-🧠 Tecnologias Utilizadas
-HTML5 – estrutura da página
+- Exibição sequencial de **24 imagens de radar**
+- Controles de navegação: **anterior**, **próximo**, **play**, **pause**
+- **Zoom interativo** para análise detalhada
+- **Barra de progresso** com marcações por frame
+- **Atualização automática** das imagens com cache busting
 
-CSS3 – estilização responsiva
+---
 
-JavaScript (Vanilla) – lógica de navegação e interatividade
+## 🧠 Tecnologias Utilizadas
 
-Python 3 – backend e automações
+- **HTML5** – estrutura da página  
+- **CSS3** – estilização responsiva  
+- **JavaScript (Vanilla)** – interatividade e navegação  
+- **Python 3** – backend e automações
 
-🚀 Execução Local
-Para rodar o projeto localmente:
+---
 
-bash
+## 🚀 Execução Local
+
+```bash
 # Clone o repositório
 git clone https://github.com/rafaelioppi/radar-poa.git
 
