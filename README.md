@@ -1,4 +1,4 @@
-#🌦️ Radar POA Interativo
+🌦️ Radar POA Interativo
 Radar POA Interativo é uma aplicação web que permite visualizar imagens de radar meteorológico da região de Porto Alegre de forma dinâmica e intuitiva. Ideal para acompanhar a evolução das condições climáticas ao longo do tempo.
 
 🔗 Acesso ao Projeto
@@ -34,13 +34,24 @@ git clone https://github.com/rafaelioppi/radar-poa.git
 # Acesse a pasta do projeto
 cd radar-poa
 
-# Execute no terminal: bash start.sh
+# Execute o script de inicialização
+bash start.sh
+🗂 Estrutura do Projeto
+Código
+radar-poa-visualizador/
+├── index.html           # Página principal da aplicação
+├── style.css            # Estilos visuais responsivos
+├── script.js            # Navegação e zoom nas imagens
+├── app.py               # Backend em Python
+├── baixar_imagem.py     # Download automático das imagens de radar
+├── gemini_previsao.py   # Integração com modelo de previsão via Gemini
+├── start.sh             # Script de inicialização do projeto
+├── requirements.txt     # Lista de dependências Python
+├── render.yaml          # Configuração para deploy no Render
+├── package.json         # Configuração do ambiente Node.js
+📡 Fonte das Imagens
+As imagens de radar são carregadas diretamente do servidor da Climatempo:
 
-## 🗂 Estrutura do Projeto
-
-**Repositório:** `radar-poa-visualizador`
-
-radar-poa-visualizador/ ├── index.html # Página principal da aplicação ├── style.css # Estilos visuais responsivos ├── script.js # Navegação e zoom nas imagens ├── app.py # Backend em Python ├── baixar_imagem.py # Download automático das imagens de radar ├── gemini_previsao.py # Integração com modelo de previsão via Gemini ├── start.sh # Script de inicialização do projeto ├── requirements.txt # Lista de dependências Python ├── render.yaml # Configuração para deploy no Render ├── package.json # Configuração do ambiente Node.js
 Código
 https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_{index}.png
 📌 Observações
