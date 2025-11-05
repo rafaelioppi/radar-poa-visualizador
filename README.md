@@ -40,16 +40,7 @@ cd radar-poa
 
 **Repositório:** `radar-poa-visualizador`
 
-radar-poa-visualizador/ ├── index.html # Página principal ├── style.css # Estilos visuais ├── script.js # Navegação e zoom ├── app.py # Servidor backend em Python ├── baixar_imagem.py # Download automático das imagens ├── gemini_previsao.py # Integração com modelo de previsão ├── start.sh # Script de inicialização ├── requirements.txt # Dependências Python ├── render.yaml # Configuração de deploy ├── package.json # Configuração Node.js
-
-Código
-
-## 📡 Fonte das Imagens
-
-As imagens de radar são carregadas diretamente do servidor da **Climatempo**:
-
-https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_{index}.png
-
+radar-poa-visualizador/ ├── index.html # Página principal da aplicação ├── style.css # Estilos visuais responsivos ├── script.js # Navegação e zoom nas imagens ├── app.py # Backend em Python ├── baixar_imagem.py # Download automático das imagens de radar ├── gemini_previsao.py # Integração com modelo de previsão via Gemini ├── start.sh # Script de inicialização do projeto ├── requirements.txt # Lista de dependências Python ├── render.yaml # Configuração para deploy no Render ├── package.json # Configuração do ambiente Node.js
 Código
 https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_{index}.png
 📌 Observações
