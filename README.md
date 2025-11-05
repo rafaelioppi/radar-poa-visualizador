@@ -56,7 +56,5 @@ radar-poa-visualizador/
 📡 Fonte das Imagens
 As imagens de radar são carregadas diretamente do servidor da Climatempo:
 
-Código
-https://statics.climatempo.com.br/radar_poa/pngs/latest/radar_poa_{index}.png
 📌 Observações
 Este projeto tem fins educacionais e demonstrativos. As imagens utilizadas são públicas, mas qualquer uso comercial deve respeitar os termos da fonte original.
